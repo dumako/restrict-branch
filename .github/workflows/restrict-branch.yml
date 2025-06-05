@@ -20,8 +20,9 @@ jobs:
               exit 1
             fi
           elif [ "$BASE_BRANCH" = "develop" ]; then
-            if [ ! "$HEAD_BRANCH" = "staging" ]; then
-              echo "Error: PRs to develop must come from the staging branch."
+            if [ ! "$HEAD_BRANCH" = "staging" ] \
+              && [[ ! "$HEAD_BRANCH" =~ "^hotfix-" ]]; then
+              echo 'Error: PRs to develop must come from the staging or hotfix-* branch.'
               exit 1
             fi
           fi
