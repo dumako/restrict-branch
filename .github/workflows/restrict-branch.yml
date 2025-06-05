@@ -1,0 +1,22 @@
+name: Restrict head branch
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  restrict-head-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if not from develop branch
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }} 
+          BASE_BRANCH: ${{ github.base_ref }}
+        run: |
+          echo ${{ github.ref_name }} ' : ' $BASE_BRANCH ' <- ' $HEAD_BRANCH 
+          if [ "$BASE_BRANCH" = "main" ]; then
+            if [ ! "$HEAD_BRANCH" = "develop" ]; then
+              echo "Error: PRs to main must come from the develop branch."
+              exit 1
+            fi
+          fi
